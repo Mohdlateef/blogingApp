@@ -1,7 +1,10 @@
+const mongoose=require("mongoose")
+const Schema=mongoose.Schema;
 const bcrypt=require("bcrypt")
-
+// fileExports
 const { registerUser, findUserWithLoginId } = require("../models/userModel");
 const { userValidation } = require("../utils/authUtils");
+
 
 const registerControler = async (req, res) => {
   const { name, username, email, password } = req.body;
@@ -23,7 +26,9 @@ const registerControler = async (req, res) => {
     });
   }
 };
-
+const loginpageController=(req,res)=>{
+return res.render("login")
+}
 
 const loginControler=async(req,res)=>{
   const {loginId,password}=req.body;
@@ -82,6 +87,38 @@ const logoutController=async(req,res)=>{
     }
     )
   })
+
+
 }
 
-module.exports = { registerControler ,loginControler,logoutController};
+
+const logOutAllController=async(req,res)=>{
+  const userId=req.session.User.userId;
+
+  //create a session schema
+  const sessionSchema=new Schema({_id:String},{strict:false});
+  // conver it into a model
+  const sessionModel=mongoose.model("session",sessionSchema);
+  
+  // perform mongoose query to delete the entry
+  console.log(userId ,104);
+  try {
+    const deleteDb=await sessionModel.deleteMany({
+      "session.User.userId":userId
+    });
+    console.log(deleteDb);
+    return res.send({
+      status:200,
+    message:`you are logout form ${deleteDb.deletedCount} devices secussfully`
+    })
+  } catch (error) {
+  return  res.send({
+      status:500,
+      message:"internal server error",
+      error:error,
+    })
+  }
+
+
+}
+module.exports = { registerControler, loginpageController,loginControler,logoutController,logOutAllController};

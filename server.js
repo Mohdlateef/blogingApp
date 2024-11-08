@@ -2,11 +2,13 @@ const express=require("express");
 require("dotenv").config();
 const session=require("express-session");
 const mongodbsession=require("connect-mongodb-session")(session);
-
+const ejs=require("ejs")
 const clc=require("cli-color");
 const app=express();
-
-
+app.set("view engine" ,"ejs")
+// globalmiddlewarea
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 // sessionconnection
 const store=new mongodbsession({
     uri:process.env.MONGO_URI,
@@ -22,16 +24,15 @@ app.use(session({
 // constants
 const PORT=process.env.PORT 
 
-
-// globalmiddlewarea
-app.use(express.json());
-
-
 // fileImports
 const dbConnection=require("./dbConection");
 const authRouter = require("./routers/authRouter");
+const blogRouter = require("./routers/blogRouter");
+
 
 app.use("/auth",authRouter)
+app.use("/blog",blogRouter)
+
 
 
 app.listen(PORT,()=>{
