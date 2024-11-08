@@ -1,16 +1,87 @@
+const bcrypt=require("bcrypt")
+
+const { registerUser, findUserWithLoginId } = require("../models/userModel");
+const { userValidation } = require("../utils/authUtils");
+
+const registerControler = async (req, res) => {
+  const { name, username, email, password } = req.body;
+  try {
+    //datavalidation
+    await userValidation({ username, email, password });
+
+    // registeruser
+    await registerUser({ name, username, email, password });
+    return res.send({
+      status: 201,
+      message: "userregister sucessfully",
+    });
+  } catch (error) {
+    return res.send({
+      status: 400,
+      message: "server error",
+      error: error,
+    });
+  }
+};
 
 
+const loginControler=async(req,res)=>{
+  const {loginId,password}=req.body;
 
-//models
-const userModel = require("../models/userModel");
+  try {
+    //find user in Db
+    const userDb=await findUserWithLoginId({loginId});
 
-
-function registerControler(req,res){
-  const {name,username,email,password}=req.body;
-userModel({name,username,email,password})
-  return res.send("you are in register controller");
-
+    //compare password
+   const ismatch=await bcrypt.compare(password,userDb.password)
+    
+   if(!ismatch){
+          return res.send({
+            status:400,
+            message:"incrorect password"
+          });
+        }
+        // create_session
+      req.session.isAuth=true;
+      
+      req.session.User={
+        userId:userDb._id,
+        username:userDb.username,
+        email:userDb.email,
+      }
+  res.send({
+    status:200,
+    message:"login sucessfully",
+    data:userDb
+  })
+  } catch (error) {
+    console.log(error);
+    return res.send({
+      status:400,
+      "message":"backend error",
+      "error":error
+    })
+    
+  }
 
 }
 
-module.exports = { registerControler };
+//logout
+const logoutController=async(req,res)=>{
+  req.session.destroy((err)=>{
+    if(err){
+      return res.send({
+        status:400,
+        message:"logout unsucessfull",
+        err:err,
+      })
+    }
+    return res.send({
+      status:200,
+      message:"logout sucessfully"
+    }
+    )
+  })
+}
+
+module.exports = { registerControler ,loginControler,logoutController};
