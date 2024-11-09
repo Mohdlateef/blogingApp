@@ -2,7 +2,7 @@ const mongoose=require("mongoose")
 const Schema=mongoose.Schema;
 const bcrypt=require("bcrypt")
 // fileExports
-const { registerUser, findUserWithLoginId } = require("../models/userModel");
+const { registerUser, findUserWithKey } = require("../models/userModel");
 const { userValidation } = require("../utils/authUtils");
 
 
@@ -35,7 +35,7 @@ const loginControler=async(req,res)=>{
 
   try {
     //find user in Db
-    const userDb=await findUserWithLoginId({loginId});
+    const userDb=await findUserWithKey({Key:loginId});
 
     //compare password
    const ismatch=await bcrypt.compare(password,userDb.password)

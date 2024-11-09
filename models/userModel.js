@@ -1,5 +1,6 @@
 const cli = require("cli-color");
 const bcrypt = require("bcrypt");
+const ObjectId=require("mongodb").ObjectId;
 // file imports
 const userSchema = require("../schemas/userSchema");
 
@@ -36,12 +37,15 @@ const registerUser = ({ name, username, email, password }) => {
 
 
 //login_user
-const findUserWithLoginId=({loginId})=>{
+const findUserWithKey=({key})=>{
 
     return new Promise(async(resolve,reject)=>{
         try {
+          if(!key){
+            reject("key is missing")
+          }
             const userData=await userSchema.findOne({
-                $or:[{username:loginId},{email:loginId}]
+                $or:[ObjectId.isvalid(key)?{_id:key}:{username:loginId},{email:loginId}]
 
             });
           
@@ -56,4 +60,4 @@ const findUserWithLoginId=({loginId})=>{
 
 }
 
-module.exports = { registerUser ,findUserWithLoginId};
+module.exports = { registerUser ,findUserWithKey};

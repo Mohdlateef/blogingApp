@@ -25,13 +25,16 @@ app.use(session({
 const PORT=process.env.PORT 
 
 // fileImports
+const auth=require("./middlewares/authMiddleware")
 const dbConnection=require("./dbConection");
 const authRouter = require("./routers/authRouter");
 const blogRouter = require("./routers/blogRouter");
+const followRouter = require("./routers/followrouter");
 
 
 app.use("/auth",authRouter)
-app.use("/blog",blogRouter)
+app.use("/blog",auth,blogRouter)
+app.use("/follow",auth,followRouter)
 
 
 
