@@ -1,6 +1,6 @@
 const blogSchema=require("../schemas/blogSchema")
 
-const blogModel=({title,textbody,userId})=>{
+const createBlogModel=({title,textbody,userId})=>{
     return new Promise(async(resolve,reject)=>{
            
         const blogdb=new blogSchema({
@@ -17,4 +17,15 @@ const blogModel=({title,textbody,userId})=>{
         }
     })
 }
-module.exports=blogModel
+
+const readBlogModel=({userId})=>{
+    return new Promise(async(resolve,reject)=>{
+    try {
+        const blogs=await blogSchema.find({userId})
+        resolve(blogs);
+    } catch (error) {
+        reject(error)
+    }
+    })
+}
+module.exports={createBlogModel,readBlogModel}

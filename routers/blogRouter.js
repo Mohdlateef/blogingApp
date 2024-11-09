@@ -2,13 +2,17 @@ const express=require("express");
 
 //file imports;
 const auth = require("../middlewares/authMiddleware");
-const { createBlogControler } = require("../controlers/blogControlers");
+const { createBlogControler, readBlogController } = require("../controlers/blogControlers");
 
 
 const blogRouter=express.Router();
 
 
-blogRouter.post("/createblog",auth,createBlogControler)
+blogRouter
+.post("/createblog",auth,createBlogControler)
+.get("/readblog",auth,readBlogController);
+
+
 
 
 
