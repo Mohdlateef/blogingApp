@@ -2,7 +2,13 @@ const express=require("express");
 
 //file imports;
 const auth = require("../middlewares/authMiddleware");
-const { createBlogControler, readBlogController } = require("../controlers/blogControlers");
+
+const { createBlogControler,
+     readBlogsController ,
+     readMyBlogsController,
+     editBlogsController,
+     deleteBlogController
+    } = require("../controlers/blogControlers");
 
 
 const blogRouter=express.Router();
@@ -10,7 +16,11 @@ const blogRouter=express.Router();
 
 blogRouter
 .post("/createblog",auth,createBlogControler)
-.get("/readblog",auth,readBlogController);
+.get("/readblogs",auth,readBlogsController)
+.get("/read_my_blogs",auth,readMyBlogsController)
+.post("/editblog",auth,editBlogsController)
+.post("/deleteblog",auth,deleteBlogController)
+
 
 
 

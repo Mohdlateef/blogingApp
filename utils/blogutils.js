@@ -1,4 +1,4 @@
-const blogdatavalidation = ({ title, textbody }) => {
+const blogdatavalidation = ( title, textbody ) => {
   return new Promise((resolve, reject) => {
     if (!title) reject("title is missing");
 
