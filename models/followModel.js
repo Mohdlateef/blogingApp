@@ -16,4 +16,17 @@ const followUser=({followerUserId,followingUserId})=>{
     })
 }
 
-module.exports={followUser}
+const followingUser=({followerUserId})=>{
+    return new Promise(async(resolve,reject)=>{
+        try {
+            const followingList=await followSchema.find({followerUserId:followerUserId}
+            ).populate("followingUserId");
+            console.log(followingList)
+            resolve(followingList)
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+module.exports={followUser,followingUser}

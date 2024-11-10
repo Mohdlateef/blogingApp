@@ -38,14 +38,14 @@ const registerUser = ({ name, username, email, password }) => {
 
 //login_user
 const findUserWithKey=({key})=>{
-
+console.log(key,41)
     return new Promise(async(resolve,reject)=>{
         try {
           if(!key){
             reject("key is missing")
           }
             const userData=await userSchema.findOne({
-                $or:[ObjectId.isvalid(key)?{_id:key}:{username:loginId},{email:loginId}]
+                $or:[ObjectId.isValid(key)?{_id:key}:{username:key},{email:key}]
 
             });
           
