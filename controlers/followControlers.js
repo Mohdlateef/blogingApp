@@ -1,4 +1,4 @@
-const { followUser, followingUser } = require("../models/followModel");
+const { followUser, followingUser, followerUser } = require("../models/followModel");
 const { findUserWithKey } = require("../models/userModel");
 
 const followUserControler=async(req,res)=>{
@@ -65,4 +65,24 @@ const getFollowingController=async(req,res)=>{
     
 
 }
-module.exports={followUserControler,getFollowingController};
+const getFollowerController=async(req,res)=>{
+ 
+    const followingUserId=req.session.User.userId;
+    const SKIP=parseInt(req.query.SKIP)||0;
+    try {
+        const followerUserList=await followerUser({followingUserId,SKIP})
+        return res.send({
+            status:200,
+            data:followingUserId,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.send({
+            status:500,
+            message:'internal server error',
+            error:error,
+        })
+        
+    }
+}
+module.exports={followUserControler,getFollowingController,getFollowerController};
