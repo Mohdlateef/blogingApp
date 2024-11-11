@@ -25,26 +25,28 @@ const followingUser = ({ followerUserId, SKIP }) => {
       // ).populate("followingUserId");
       // console.log(followingList)
       // resolve(followingList)
-      const followingListDb= await followSchema.aggregate([
+      const followingListDb = await followSchema.aggregate([
         { $match: { followerUserId: followerUserId } },
         { $sort: { creationDateTime: -1 } },
         { $skip: SKIP },
         { $limit: LIMIT },
       ]);
-      console.log(followingListDb,34);
+      console.log(followingListDb, 34);
 
-      const followingUserId=followingListDb.map((iteam)=>iteam.followingUserId);
-      const followingUserDetails=await userSchema.find({
-        _id:{$in:followingUserId}
+      const followingUserId = followingListDb.map(
+        (iteam) => iteam.followingUserId
+      );
+      const followingUserDetails = await userSchema.find({
+        _id: { $in: followingUserId },
       });
       console.log(followingUserDetails),
-      resolve(followingUserDetails.reverse())
+        resolve(followingUserDetails.reverse());
     } catch (error) {
       reject(error);
     }
   });
 };
-const followerUser = ({ followingUserId ,SKIP}) => {
+const followerUser = ({ followingUserId, SKIP }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const followerList = await followSchema.aggregate([
@@ -53,9 +55,9 @@ const followerUser = ({ followingUserId ,SKIP}) => {
         { $skip: SKIP },
         { $limit: LIMIT },
       ]);
-     if(followerList.length===0){
+      if (followerList.length === 0) {
         reject("no data found");
-     }
+      }
       const followerUserIds = followerList.map((iteam) => iteam.followerUserId);
       const followerUserDetails = await userSchema.find({
         _id: { $in: followerUserIds },
