@@ -68,4 +68,14 @@ const followerUser = ({ followingUserId, SKIP }) => {
     }
   });
 };
-module.exports = { followUser, followingUser, followerUser };
+const unFollowUser=({followerUserId,followingUserId})=>{
+  return new Promise(async(reject,resolve)=>{
+   try {
+    const deleteDb=await followSchema.findOneAndDelete({followerUserId:followerUserId},{followingUserId:followingUserId});
+    resolve(deleteDb);
+  }
+   catch (error) {
+    reject(error);
+   }})
+}
+module.exports = { followUser, followingUser, followerUser ,unFollowUser};

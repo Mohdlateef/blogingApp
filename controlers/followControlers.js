@@ -1,4 +1,4 @@
-const { followUser, followingUser, followerUser } = require("../models/followModel");
+const { followUser, followingUser, followerUser, unFollowUser } = require("../models/followModel");
 const { findUserWithKey } = require("../models/userModel");
 
 const followUserControler=async(req,res)=>{
@@ -85,4 +85,30 @@ const getFollowerController=async(req,res)=>{
         
     }
 }
-module.exports={followUserControler,getFollowingController,getFollowerController};
+const unFollowController=async(req,res)=>{
+    const followerUserId=req.session.user.User.userId;
+    const follwingUserId=req.body.followingUserId;
+    try {
+        const deleDb=await unFollowUser({followerUserId,followingUserId});
+        if(!deleDb){
+            return res.send({
+                status:400,
+                message:"user Not found"
+            })
+          
+        }
+        return res.send({
+            status:200,
+            message:"unfollowed sucessfully"
+        })
+    } catch (error) {
+        return res.send({
+            status:500,
+            message:"internal server error",
+            error:error,
+        })
+    }
+
+
+}
+module.exports={followUserControler,getFollowingController,getFollowerController,unFollowController};
