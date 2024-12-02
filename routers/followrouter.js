@@ -1,5 +1,5 @@
 const express=require("express");
-const { followUserControler, getFollowingController, getFollowerController, unFollowController } = require("../controlers/followControlers");
+const { followUserControler, getFollowingController, getFollowerController, unFollowController } = require("../controllers/followControllers");
 
 
 const followRouter=express.Router();

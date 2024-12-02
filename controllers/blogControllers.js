@@ -1,3 +1,4 @@
+const ObjectId=require("mongodb").ObjectId;
 const {
   createBlogModel,
   readBlogsModel,
@@ -6,12 +7,16 @@ const {
   editBlog,
   deleteBlog,
 } = require("../models/blogModel");
+const { LIMIT } = require("../privateContants");
 
 const blogdatavalidation = require("../utils/blogutils");
 
 const createBlogControler = async (req, res) => {
-  const { title, textbody } = req.body;
-  const userId = req.session.User.userId;
+  const { title, textbody ,userId} = req.body;
+ 
+console.log(title,textbody,userId,16)
+  // const userId = req.session.User.userId;
+
   try {
     await blogdatavalidation(title, textbody);
   } catch (error) {
@@ -23,6 +28,7 @@ const createBlogControler = async (req, res) => {
   // store blogs
   try {
     const blogdb = await createBlogModel({ title, textbody, userId });
+    console.log("from blogs",userId)
     return res.send({
       status: 201,
       message: "blog created sucessfully ",
@@ -41,7 +47,11 @@ const createBlogControler = async (req, res) => {
 
 const readBlogsController = async (req, res) => {
   const SKIP = parseInt(req.query.SKIP) || 0;
-  console.log(SKIP);
+  // console.log(SKIP);
+  // setTimeout(() => {
+    
+  // }, 3000);
+  // console.log(req.session,"from read")
   try {
     const blogs = await readBlogsModel({ SKIP });
     if (blogs.length == 0) {
@@ -53,6 +63,8 @@ const readBlogsController = async (req, res) => {
     return res.send({
       status: 200,
       data: blogs,
+      limit:LIMIT
+
     });
   } catch (error) {
     return res.send({
@@ -66,8 +78,10 @@ const readBlogsController = async (req, res) => {
 
 const readMyBlogsController = async (req, res) => {
   const SKIP = parseInt(req.query.SKIP) || 0;
-  const userId = req.session.User.userId;
-
+  console.log(SKIP,"from readmy")
+  console.log(req.query)
+// return res.send("from");
+const userId=new ObjectId(req.query.userId)
   try {
     const myblogs = await readMyBlogsModel({ SKIP, userId });
     // console.log(myblogs);
@@ -82,6 +96,7 @@ const readMyBlogsController = async (req, res) => {
       data: myblogs,
     });
   } catch (error) {
+    console.log(error);
     return res.send({
       staus: 500,
       message: "internal server error",
@@ -92,12 +107,14 @@ const readMyBlogsController = async (req, res) => {
 
 //Edit blogs
 const editBlogsController=async(req,res)=>{
-const {newTitle,newText,blogId}=req.body;
+const {newText,blogId}=req.body;
+
 //dataValidation
 try {
-  await blogdatavalidation(newTitle,newText)
+  await blogdatavalidation(newText)
 
 } catch (error) {
+console.log(error);
   return res.send({
     status:400,
     error:error,
@@ -106,7 +123,7 @@ try {
  try {
   const blogdata=await getBlogWithId({blogId});
   console.log(blogdata)
-  const userId=req.session.User.userId;
+  // const userId=req.session.User.userId;
   
   // checkblog
   if(!blogdata){
@@ -116,17 +133,17 @@ try {
     })
   }
 
- //check usre authantication
-  if(!userId.equals(blogdata.userId))
-  {
-    res.send({
-      staus:403,
-      message:'unauthorised access'
-    })
-  }
+//  //check usre authantication
+//   if(!userId.equals(blogdata.userId))
+//   {
+//     res.send({
+//       staus:403,
+//       message:'unauthorised access'
+//     })
+//   }
 
   //store new data
-  await editBlog({newTitle,newText,blogId});
+  await editBlog({newText,blogId});
   return res.send({
     status:201,
     message:"new data edited sucessfully"
@@ -148,10 +165,11 @@ try {
 const deleteBlogController=async(req,res)=>{
   const {blogId}=req.body
   console.log(blogId);
+  // return res.send("from delete")
   try {
     const blogdata=await getBlogWithId({blogId});
     console.log(blogdata)
-    const userId=req.session.User.userId;
+    // const userId=req.session.User.userId;
     
     // checkblog
     if(!blogdata){
@@ -162,13 +180,13 @@ const deleteBlogController=async(req,res)=>{
     }
   
    //check usre authantication
-    if(!userId.equals(blogdata.userId))
-    {
-      res.send({
-        staus:403,
-        message:'unauthorised access'
-      })
-    }
+    // if(!userId.equals(blogdata.userId))
+    // {
+    //   res.send({
+    //     staus:403,
+    //     message:'unauthorised access'
+    //   })
+    // }
   const deletedb=  await deleteBlog({blogId});
     return res.send({
       status:200,

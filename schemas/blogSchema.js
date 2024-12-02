@@ -7,18 +7,17 @@ const blogSchema=new Schema({
     title:{
         type:String,
         require:true,
-        unique:true,
-        trim:true,
-        minlength:3,
-        maxlength:100,
+        // unique:true,
+        // trim:true,
+        // minlength:3,
+        // maxlength:100,
     },
     textbody:{
         type:String,
         require:true,
-        unique:true,
-        trim:true,
-        minlength:3,
-        maxlength:100,
+        // unique:true,
+        // trim:true,
+       
     },
     creationDateTime:{
         type:String,
@@ -27,7 +26,7 @@ const blogSchema=new Schema({
     userId:{
         type:Schema.Types.ObjectId,
         required:true,
-        ref:"user" //fk to user collection
+        // ref:"user" //fk to user collection
     }
 });
 module.exports=mongoose.model("blog",blogSchema);

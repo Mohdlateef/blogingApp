@@ -8,7 +8,7 @@ const { createBlogControler,
      readMyBlogsController,
      editBlogsController,
      deleteBlogController
-    } = require("../controlers/blogControlers");
+    } = require("../controllers/blogControllers");
 
 
 const blogRouter=express.Router();

@@ -46,11 +46,11 @@ const readMyBlogsModel = ({ SKIP, userId }) => {
     try {
       const myblogs = await blogSchema.aggregate([
         { $match: { userId } },
-        { $sort: { creationDateTimem: -1 } },
+        { $sort: { creationDateTime: -1 } },
         { $skip: SKIP },
         { $limit: LIMIT },
       ]);
-      //   console.log(myblogs);
+        // console.log(myblogs,53);
       resolve(myblogs);
     } catch (error) {
       reject(error);
@@ -74,7 +74,7 @@ const editBlog = ({ newTitle, newText, blogId }) => {
     try {
       await blogSchema.findOneAndUpdate(
         { _id: blogId },
-        { title: newTitle, textbody: newText }
+        {  textbody: newText }
       );
       resolve();
     } catch (error) {
