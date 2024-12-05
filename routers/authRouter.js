@@ -7,9 +7,8 @@ const { registerController, loginControler, logoutController, loginpageControlle
 const authRouter=express.Router();
 
 authRouter
-.get("/login",loginpageController)
-.post("/register",registerController)
-.post("/login",loginControler)
+.post("/sign-up",registerController)
+.post("/sign-in",loginControler)
 .post("/logout",auth,logoutController)
 .post("/logoutAll",auth,logOutAllController);
 

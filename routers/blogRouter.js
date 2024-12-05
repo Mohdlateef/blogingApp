@@ -15,11 +15,11 @@ const blogRouter=express.Router();
 
 
 blogRouter
-.post("/createblog",createBlogControler)
-.get("/readblogs",readBlogsController)
+.post("/create-blog",auth,createBlogControler)
+.get("/read-blogs",readBlogsController)
 .get("/read-my-blogs",readMyBlogsController)
-.post("/editblog",editBlogsController)
-.post("/deleteblog",deleteBlogController)
+.post("/edit-blog",editBlogsController)
+.post("/delete-blog",deleteBlogController)
 
 
 
